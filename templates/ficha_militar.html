@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <title>Ficha Electronica do Militar</title>
+
+  <!-- Bootstrap local -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap-5.3.8-dist/css/bootstrap.min.css', _external=True) }}">
+
+  <!-- FontAwesome local -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/all.min.css', _external=True) }}">
+
+  <style>
+    body { font-family: "Times New Roman", serif; background: #f8f9fa; }
+    .cabecalho { text-align: center; border-bottom: 2px solid #0d6efd; padding-bottom: 15px; margin-bottom: 30px; }
+    .brasao { height: 80px; display: block; margin: 0 auto 15px auto; }
+    .cabecalho h6 { margin: 5px 0; font-size: 1rem; color:#333; }
+    .cabecalho h5 { font-size: 1.6rem; font-weight: bold; color: #0d6efd; margin-top: 15px; }
+    .acoes { text-align: right; margin-bottom: 25px; }
+    .acoes .btn { margin-left: 10px; font-size: 1rem; padding: 8px 16px; }
+    .card { margin-bottom: 20px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); border-radius: 15px; max-width: 1100px; margin-left:auto; margin-right:auto; }
+    .card-header { background: #0d6efd; color: #fff; font-weight: bold; border-top-left-radius: 15px; border-top-right-radius: 15px; }
+    .campo strong { color: #333; }
+    .campo { margin-bottom: 8px; }
+  </style>
+</head>
+<body class="container mt-4">
+
+  <!-- Cabeçalho institucional -->
+  <div class="cabecalho">
+    <img src="{{ url_for('static', filename='emblem.png', _external=True) }}" alt="Emblema Nacional">
+    <h6>República de Moçambique</h6>
+    <h6>Ministério da Defesa Nacional</h6>
+    <h6>Estado-Maior General</h6>
+    <h6>Comando do Exercito</h6>
+    <h5>Ficha Electronica Individual do Militar</h5>
+  </div>
+
+  <div class="d-flex justify-content-end gap-2 mb-4">
+    <button class="btn btn-primary" onclick="window.print()">
+      <i class="fas fa-print"></i>
+    </button>
+    <a href="/militar/{{ militar.id }}/pdf" class="btn btn-success">
+      <i class="fas fa-file-pdf"></i>
+    </a>
+    <a href="{{ url_for('listar_militares') }}" class="btn btn-secondary">
+      <i class="fas fa-arrow-left"></i>
+    </a>
+  </div>
+
+  <!-- Dados Pessoais -->
+  <div class="card">
+    <div class="card-header">Dados Pessoais</div>
+    <div class="card-body p-3 row g-3">
+
+      <!-- Foto do Militar alinhada à direita -->
+	<div class="col-md-3 text-center ms-auto">
+	  {% if militar.foto %}
+		{% if '.' in militar.foto %}
+		  <!-- Se já tem extensão, usa direto -->
+		  <img src="{{ url_for('static', filename='uploads/' ~ militar.foto) }}"
+			   alt="Foto do Militar" class="img-thumbnail mb-2" style="max-width: 200px;">
+		{% else %}
+		  <!-- Se não tem extensão, tenta JPG -->
+		  <img src="{{ url_for('static', filename='uploads/' ~ militar.foto ~ '.JPG') }}"
+			   alt="Foto do Militar" class="img-thumbnail mb-2" style="max-width: 200px;">
+		{% endif %}
+	  {% else %}
+		<p class="text-muted">Sem foto cadastrada</p>
+	  {% endif %}
+	</div>
+
+
+      <!-- Dados textuais -->
+      <div class="col-md-9">
+        <div class="row">
+          <div class="col-md-6 campo"><strong>Nome:</strong> {{ militar.nome_completo }}</div>
+          <div class="col-md-6 campo"><strong>Sexo:</strong> {{ militar.sexo }}</div>
+          <div class="col-md-4 campo"><strong>Data Nascimento:</strong> {{ militar.data_nascimento.strftime('%d/%m/%Y') if militar.data_nascimento else '' }}</div>
+          <div class="col-md-4 campo"><strong>Idade:</strong> {{ militar.idade }}</div>
+          <div class="col-md-4 campo"><strong>Altura:</strong> {{ militar.altura }} cm</div>
+          <div class="col-md-4 campo"><strong>Calçado:</strong> {{ militar.numero_calcado }}</div>
+          <div class="col-md-4 campo"><strong>Nacionalidade:</strong> {{ militar.nacionalidade }}</div>
+          <div class="col-md-4 campo"><strong>Email:</strong> {{ militar.email }}</div>
+          <div class="col-md-4 campo"><strong>Contacto 1:</strong> {{ militar.contacto1 }}</div>
+          <div class="col-md-4 campo"><strong>Contacto 2:</strong> {{ militar.contacto2 }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dados de Nascimento -->
+  <div class="card">
+    <div class="card-header">Dados de Nascimento</div>
+    <div class="card-body p-3">
+      <div class="row">
+        <div class="col-md-4 campo"><strong>País:</strong> {{ militar.pais_nascimento }}</div>
+        <div class="col-md-4 campo"><strong>Província:</strong> {{ militar.provincia_nascimento }}</div>
+        <div class="col-md-4 campo"><strong>Distrito:</strong> {{ militar.distrito_nascimento }}</div>
+        <div class="col-md-6 campo"><strong>Posto Administrativo:</strong> {{ militar.posto_administrativo }}</div>
+        <div class="col-md-6 campo"><strong>Localidade:</strong> {{ militar.localidade }}</div>
+        <div class="col-md-4 campo"><strong>Estado Civil:</strong> {{ militar.estado_civil }}</div>
+        <div class="col-md-8 campo"><strong>Cônjuge:</strong> {{ militar.conjuge }}</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Emergência -->
+  <div class="card">
+    <div class="card-header">Emergência</div>
+    <div class="card-body p-3">
+      <div class="row">
+        <div class="col-md-4 campo"><strong>Nome:</strong> {{ militar.nome_emergencia }}</div>
+        <div class="col-md-4 campo"><strong>Contacto:</strong> {{ militar.contacto_emergencia }}</div>
+        <div class="col-md-4 campo"><strong>Parentesco:</strong> {{ militar.parentesco_emergencia }}</div>
+        <div class="col-md-12 campo"><strong>Morada:</strong> {{ militar.morada_emergencia }}</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Agregado Familiar -->
+  <div class="card">
+    <div class="card-header">Agregado Familiar</div>
+    <div class="card-body p-3">
+      {% if militar.familiares %}
+        <div class="row">
+          {% for f in militar.familiares %}
+            <div class="col-md-6 mb-3">
+              <strong>{{ f.nome }}</strong> - {{ f.grau_parentesco }}
+              {% if f.data_nasc %}<br><small>Nasc.: {{ f.data_nasc }}</small>{% endif %}
+              <br><small>Morada: {{ f.morada }}</small>
+              <br><small>Contacto: {{ f.telefone }}</small>
+              <br><small>Província: {{ f.provincia }}</small>
+              {% if f.observacoes %}<br><small>Obs: {{ f.observacoes }}</small>{% endif %}
+            </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <p>Nenhum familiar cadastrado</p>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Unidade e Especialidade -->
+  <div class="card">
+    <div class="card-header">Unidade e Especialidade</div>
+    <div class="card-body p-3">
+      <div class="row">
+        <div class="col-md-6 campo"><strong>Unidade:</strong> {{ militar.unidade }}</div>
+        <div class="col-md-6 campo"><strong>Especialidade:</strong> {{ militar.especialidade }}</div>
+        <div class="col-md-6 campo"><strong>Província:</strong> {{ militar.provincia }}</div>
+        <div class="col-md-6 campo"><strong>Distrito:</strong> {{ militar.distrito }}</div>
+      </div>
+    </div>
+  </div>
+
+    <!-- Dados Bancários -->
+  <div class="card">
+    <div class="card-header">Dados Bancários</div>
+    <div class="card-body p-3">
+      <div class="row">
+        <div class="col-md-6 campo"><strong>Conta Bancária:</strong> {{ militar.conta_bancaria }}</div>
+        <div class="col-md-6 campo"><strong>Banco:</strong> {{ militar.banco }}</div>
+      </div>
+    </div>
+  </div>
+  
+<!-- Dados Profissionais -->
+<div class="card">
+  <div class="card-header">Dados Profissionais</div>
+  <div class="card-body p-3">
+    <div class="row">
+      <div class="col-md-6 campo"><strong>Patente:</strong> {{ militar.patente }}</div>
+      <div class="col-md-6 campo"><strong>Cargo/Função:</strong> {{ militar.cargo_funcao }}</div>
+      <div class="col-md-6 campo"><strong>Data de Incorporação:</strong> {{ militar.data_incorporacao.strftime('%d/%m/%Y') if militar.data_incorporacao else '' }}</div>
+      <div class="col-md-6 campo"><strong>Tempo de Serviço:</strong> {{ militar.tempo_servico }} anos</div>
+      <div class="col-md-6 campo"><strong>Ordem de Serviço:</strong> {{ militar.ordem_servico }}</div>
+      <div class="col-md-6 campo"><strong>Situação:</strong> {{ militar.situacao }}</div>
+    </div>
+  </div>
+</div>
+
+<!-- Formações -->
+<div class="card">
+  <div class="card-header d-flex justify-content-between align-items-center">
+    <span>Formações / Cursos</span>
+    <a href="{{ url_for('edit_militar', id=militar.id) }}#formacoes" class="btn btn-sm btn-primary">
+      
+    </a>
+  </div>
+  <div class="card-body p-3">
+    {% if militar.formacoes %}
+      <div class="row">
+        {% for f in militar.formacoes %}
+          <div class="col-md-6 mb-3">
+            <strong>{{ f.curso }}</strong><br>
+            <small>{{ f.estabelecimento }} - {{ f.pais }}</small><br>
+            <small>{{ f.tipo_curso }} | Nível: {{ f.nivel }}</small><br>
+            <small>Duração: {{ f.duracao }}</small><br>
+            <small>Início: {{ f.data_inicio.strftime('%d/%m/%Y') if f.data_inicio else '' }} | Fim: {{ f.data_final.strftime('%d/%m/%Y') if f.data_final else '' }}</small><br>
+            {% if f.observacoes %}<small>Obs: {{ f.observacoes }}</small>{% endif %}
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p>Nenhuma formação cadastrada</p>
+    {% endif %}
+  </div>
+</div>
+
+
+
+  <!-- Funções -->
+  <div class="card">
+    <div class="card-header">Funções</div>
+    <div class="card-body p-3">
+      {% if militar.lista_funcoes %}
+        <div class="row">
+          {% for f in militar.lista_funcoes %}
+            <div class="col-md-6 mb-3">
+              <strong>{{ f.nome }}</strong><br>
+              <small>OS: {{ f.ordem_servico }} {% if f.data_ordem %} ({{ f.data_ordem }}){% endif %}</small><br>
+              <small>Unidade: {{ f.unidade_id }}</small><br>
+              <small>Início: {{ f.inicio }} | Término: {{ f.termino }}</small><br>
+              {% if f.observacoes %}<small>Obs: {{ f.observacoes }}</small>{% endif %}
+            </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <p>Nenhuma função cadastrada</p>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Observações -->
+  <div class="card">
+    <div class="card-header">Observações</div>
+    <div class="card-body p-3">
+      <p>{{ militar.observacoes }}</p>
+    </div>
+  </div>
+
+  <!-- Promoções -->
+  <div class="card">
+    <div class="card-header">Promoções</div>
+    <div class="card-body p-3">
+      {% if militar.promocoes %}
+        <div class="row">
+          {% for p in militar.promocoes %}
+            <div class="col-md-6 mb-3">
+              <strong>{{ p.patente }}</strong><br>
+              <small>{{ p.data.strftime('%d/%m/%Y') if p.data else '' }}</small><br>
+              <small>OS nº {{ p.numero_os if p.numero_os else "—" }}</small><br>
+              {% if p.observacoes %}<small>Obs: {{ p.observacoes }}</small>{% endif %}
+            </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <p>Nenhuma promoção cadastrada</p>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Línguas -->
+  <div class="card">
+    <div class="card-header">🌐 Línguas Faladas</div>
+    <div class="card-body p-3">
+      {% if militar.linguas %}
+        <div class="row">
+          {% for l in militar.linguas %}
+            <div class="col-md-6 mb-3">
+              <strong>{{ l.nome }}</strong>
+              {% if l.materna %} <span class="badge bg-success">Materna</span>{% endif %}<br>
+              <small>Fala: {{ l.fala }} | Leitura: {{ l.leitura }} | Escrita: {{ l.escrita }} | Compreensão: {{ l.compreensao }}</small>
+            </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <p>Nenhuma língua cadastrada</p>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Auditoria -->
+  <div class="card">
+    <div class="card-header">Auditoria</div>
+    <div class="card-body p-3">
+      <div class="campo"><strong>Registo Criado em:</strong> {{ militar.created_at.strftime('%d/%m/%Y %H:%M') if militar.created_at else '' }}</div>
+    </div>
+  </div>
+
+</body>
+</html>
+

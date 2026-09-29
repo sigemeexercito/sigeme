@@ -1,0 +1,153 @@
+{% extends "base.html" %}
+
+{% block title %}Relatório com Filtros{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="mb-4">Relatório com Filtros</h1>
+
+    <!-- Formulário de Filtros -->
+    <form method="get" action="{{ url_for('relatorio_filtro') }}" class="row g-3 mb-4">
+        <div class="col-md-2">
+            <label for="patente" class="form-label">Patente</label>
+            <select name="patente" id="patente" class="form-select">
+                <option value="">-- Todas --</option>
+                {% for p in patentes %}
+                    <option value="{{ p }}" {% if patente == p %}selected{% endif %}>{{ p }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-2">
+            <label for="unidade" class="form-label">Unidade</label>
+            <select name="unidade" id="unidade" class="form-select">
+                <option value="">-- Todas --</option>
+                {% for u in unidades %}
+                    <option value="{{ u }}" {% if unidade == u %}selected{% endif %}>{{ u }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-2">
+            <label for="especialidade" class="form-label">Especialidade</label>
+            <select name="especialidade" id="especialidade" class="form-select">
+                <option value="">-- Todas --</option>
+                {% for e in especialidades %}
+                    <option value="{{ e }}" {% if especialidade == e %}selected{% endif %}>{{ e }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-2">
+            <label for="nivel_academico" class="form-label">Nível Acadêmico</label>
+            <select name="nivel_academico" id="nivel_academico" class="form-select">
+                <option value="">-- Todas --</option>
+                {% for n in niveis %}
+                    <option value="{{ n }}" {% if nivel_academico == n %}selected{% endif %}>{{ n }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-2">
+            <label for="regime" class="form-label">Regime</label>
+            <select name="regime" id="regime" class="form-select">
+                <option value="">-- Todas --</option>
+                {% for r in regimes %}
+                    <option value="{{ r }}" {% if regime == r %}selected{% endif %}>{{ r }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-2">
+            <label for="tempo_servico" class="form-label">Tempo de Serviço</label>
+            <select name="tempo_servico" id="tempo_servico" class="form-select">
+                <option value="">-- Todos --</option>
+                {% for t in tempos %}
+                    <option value="{{ t }}" {% if tempo_servico == t %}selected{% endif %}>{{ t }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- Novo filtro: Situação -->
+        <div class="col-md-2">
+            <label for="situacao" class="form-label">Situação</label>
+            <select name="situacao" id="situacao" class="form-select">
+                <option value="">-- Todas --</option>
+                <option value="Activo" {% if situacao == 'Activo' %}selected{% endif %}>Activo</option>
+                <option value="RD" {% if situacao == 'RD' %}selected{% endif %}>RD</option>
+                <option value="Cessacao RV" {% if situacao == 'Cessacao RV' %}selected{% endif %}>Cessação RV</option>
+                <option value="Reforma extraordinaria" {% if situacao == 'Reforma extraordinaria' %}selected{% endif %}>Reforma extraordinária</option>
+                <option value="Expulsao" {% if situacao == 'Expulsao' %}selected{% endif %}>Expulsão</option>
+                <option value="Falecido" {% if situacao == 'Falecido' %}selected{% endif %}>Falecido</option>
+                <option value="Disertor" {% if situacao == 'Disertor' %}selected{% endif %}>Disertor</option>
+            </select>
+        </div>
+
+        <div class="col-md-3">
+            <label for="nome" class="form-label">Nome</label>
+            <input type="text" id="nome" name="nome" class="form-control" value="{{ nome }}">
+        </div>
+
+        <div class="col-md-3">
+            <label for="sexo" class="form-label">Sexo</label>
+            <select id="sexo" name="sexo" class="form-select">
+                <option value="">-- Todos --</option>
+                <option value="M" {% if sexo == 'M' %}selected{% endif %}>Masculino</option>
+                <option value="F" {% if sexo == 'F' %}selected{% endif %}>Feminino</option>
+            </select>
+        </div>
+
+        <div class="col-md-12 d-flex align-items-end">
+            <button type="submit" class="btn btn-primary w-100">Filtrar</button>
+        </div>
+    </form>
+
+    <!-- Botão de Exportação -->
+<div class="d-flex justify-content-end mb-3">
+    <a href="{{ url_for('relatorio_filtro_pdf',
+        patente=patente, unidade=unidade, especialidade=especialidade,
+        nivel_academico=nivel_academico, regime=regime, tempo_servico=tempo_servico,
+        situacao=situacao, nome=nome, sexo=sexo) }}"
+       class="btn btn-danger">
+        📄 Exportar PDF
+    </a>
+</div>
+
+<!-- Tabela de Resultados -->
+<table class="table table-bordered table-striped mt-3">
+    <thead class="table-dark">
+        <tr>
+            <th>ID</th>
+            <th>Nome</th>
+            <th>Sexo</th>
+            <th>Patente</th>
+            <th>Unidade</th>
+            <th>Especialidade</th>
+            <th>Nível Acadêmico</th>
+            <th>Regime</th>
+            <th>Tempo de Serviço</th>
+            <th>Situação</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% if dados %}
+            {% for row in dados %}
+                <tr>
+                    <td>{{ row.id }}</td>
+                    <td>{{ row.nome_completo }}</td>
+                    <td>{{ row.sexo }}</td>
+                    <td>{{ row.patente }}</td>
+                    <td>{{ row.unidade }}</td>
+                    <td>{{ row.especialidade }}</td>
+                    <td>{{ row.nivel_academico }}</td>
+                    <td>{{ row.regime }}</td>
+                    <td>{{ row.tempo_servico }}</td>
+                    <td>{{ row.situacao }}</td>
+                </tr>
+            {% endfor %}
+        {% else %}
+            <tr>
+                <td colspan="10" class="text-center text-muted">Nenhum resultado encontrado</td>
+            </tr>
+        {% endif %}
+    </tbody>
+</table>
+
+
+</div>
+{% endblock %}

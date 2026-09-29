@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <title>Pesquisar Militar</title>
+  <!-- Bootstrap local -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap-5.3.8-dist/css/bootstrap.min.css', _external=True) }}">
+  <!-- FontAwesome local -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/all.min.css', _external=True) }}">
+  <style>
+    body { background:#f8f9fa; font-family:"Times New Roman", serif; }
+    .card { max-width:900px; margin:auto; border-radius:14px; box-shadow:0 4px 12px rgba(0,0,0,0.1); }
+    .card-header { background:#0d6efd; color:#fff; font-weight:bold; font-size:1.3rem; border-top-left-radius:14px; border-top-right-radius:14px; }
+    .card-body { padding:30px; }
+    .mensagem { margin-top:20px; color:red; font-weight:bold; text-align:center; }
+    .form-inline { display:flex; align-items:center; gap:15px; }
+    .form-inline label { margin:0; font-size:1.1rem; color:#333; white-space:nowrap; }
+    .form-inline input { flex:1; }
+    .form-inline button { white-space:nowrap; }
+  </style>
+</head>
+<body>
+
+  <!-- Card de procura -->
+  <div class="card mt-5">
+    <div class="card-header">Pesquisar Militar</div>
+    <div class="card-body">
+      <form method="post" action="{{ url_for('filtro_militar') }}" class="form-inline">
+        <label for="nuit">Por favor introduza o NUIT do militar:</label>
+        <input type="text" id="nuit" name="nuit" class="form-control" placeholder="Digite o NUIT" required>
+        <button type="submit" class="btn btn-primary">
+          <i class="fas fa-search"></i> Procurar
+        </button>
+      </form>
+
+      {% if erro %}
+        <div id="mensagemErro" class="mensagem">
+          Nenhum militar encontrado com esse NUIT
+        </div>
+        <div class="text-center mt-3">
+          <a href="{{ url_for('listar_militares') }}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Voltar
+          </a>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+
+</body>
+</html>

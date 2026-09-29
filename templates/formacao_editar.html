@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block title %}Editar Formação{% endblock %}
+{% block content %}
+<div class="container mt-4">
+    <div class="card shadow-sm">
+        <div class="card-header bg-warning text-dark">
+            <h5 class="mb-0"><i class="bi bi-pencil"></i> Editar Formação</h5>
+        </div>
+        <div class="card-body">
+            <form method="post" class="row g-3">
+			<input type="hidden" name="formacao_id" value="{{ formacao.id }}">
+
+
+                <div class="col-md-6">
+                    <label for="id_militar" class="form-label">Militar</label>
+                    <select name="id_militar" id="id_militar" class="form-select form-select-sm" required>
+                        {% for m in militares %}
+                            
+							<option value="{{ m.id }}" {% if m.id == formacao.militar_id %}selected{% endif %}>
+								{{ m.nome_completo }} ({{ m.unidade }})
+							</option>
+
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="col-md-6">
+                    <label for="curso" class="form-label">Curso</label>
+                    <input type="text" name="curso" id="curso" value="{{ formacao.curso }}" class="form-control form-control-sm" required>
+                </div>
+
+                <div class="col-md-6">
+                    <label for="estabelecimento" class="form-label">Estabelecimento</label>
+                    <input type="text" name="estabelecimento" id="estabelecimento" value="{{ formacao.estabelecimento }}" class="form-control form-control-sm" required>
+                </div>
+
+                <div class="col-md-3">
+                    <label for="data_inicio" class="form-label">Data Início</label>
+                    <input type="date" name="data_inicio" id="data_inicio" value="{{ formacao.data_inicio }}" class="form-control form-control-sm" required>
+                </div>
+
+                <div class="col-md-3">
+                    <label for="data_final" class="form-label">Data Final</label>
+                    <input type="date" name="data_final" id="data_final" value="{{ formacao.data_final }}" class="form-control form-control-sm">
+                </div>
+
+                <!-- Campo de Observações -->
+                <div class="col-12">
+                    <label for="observacoes" class="form-label">Observações</label>
+                    <textarea name="observacoes" id="observacoes" rows="3" class="form-control form-control-sm">{{ formacao.observacoes }}</textarea>
+                </div>
+
+                <div class="col-12 text-end">
+                    <button type="submit" class="btn btn-success btn-sm">
+                        <i class="bi bi-check-circle"></i> Atualizar
+                    </button>
+                    <a href="{{ url_for('listar_formacao') }}" class="btn btn-secondary btn-sm">
+                        <i class="bi bi-arrow-left"></i> Voltar
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

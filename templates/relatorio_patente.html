@@ -1,0 +1,38 @@
+{% extends "base" %}
+{% block content %}
+<div class="container mt-4">
+  <h2>Relatório - Distribuição por Patente</h2>
+
+  <!-- Tabela -->
+  <table class="table table-striped">
+    <thead>
+      <tr><th>Patente</th><th>Total</th></tr>
+    </thead>
+    <tbody>
+      {% for item in dados %}
+        <tr><td>{{ item.patente }}</td><td>{{ item.total }}</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <!-- Gráfico -->
+  <canvas id="patenteChart"></canvas>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  const labels = {{ dados|map(attribute='patente')|list|tojson }};
+  const values = {{ dados|map(attribute='total')|list|tojson }};
+  new Chart(document.getElementById('patenteChart'), {
+    type: 'bar',
+    data: {
+      labels: labels,
+      datasets: [{
+        label: 'Número de militares',
+        data: values,
+        backgroundColor: 'rgba(54, 162, 235, 0.6)'
+      }]
+    }
+  });
+</script>
+{% endblock %}

@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}Relatório por Unidade{% endblock %}
+{% block content %}
+<h2>Relatório por Unidade</h2>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Unidade</th>
+      <th>Total</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for d in dados %}
+    <tr>
+      <td>{{ d.unidade }}</td>
+      <td>{{ d.total }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<canvas id="graficoUnidade"></canvas>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  const ctx = document.getElementById('graficoUnidade');
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: {{ dados|map(attribute='unidade')|list|tojson }},
+      datasets: [{
+        label: 'Total por Unidade',
+        data: {{ dados|map(attribute='total')|list|tojson }},
+        backgroundColor: 'rgba(54, 162, 235, 0.6)'
+      }]
+    }
+  });
+</script>
+{% endblock %}

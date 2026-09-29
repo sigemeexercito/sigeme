@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}Nova Formação{% endblock %}
+{% block content %}
+<div class="container mt-4">
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0"><i class="bi bi-mortarboard"></i> Cadastrar Formação</h5>
+        </div>
+        <div class="card-body">
+            <form method="post" class="row g-3">
+
+                <!-- Militar -->
+                <div class="col-md-6">
+                    <label for="militar_id" class="form-label">Militar</label>
+                    <select name="militar_id" id="militar_id" class="form-select form-select-sm" required>
+                        <option value="">-- Selecione --</option>
+                        {% for m in militares %}
+                            <option value="{{ m.id }}">{{ m.nome_completo }} ({{ m.unidade }})</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- Curso -->
+                <div class="col-md-6">
+                    <label for="curso" class="form-label">Curso</label>
+                    <input type="text" name="curso" id="curso" class="form-control form-control-sm" required>
+                </div>
+
+                <!-- Estabelecimento -->
+                <div class="col-md-6">
+                    <label for="estabelecimento" class="form-label">Estabelecimento</label>
+                    <input type="text" name="estabelecimento" id="estabelecimento" class="form-control form-control-sm" required>
+                </div>
+
+                <!-- Datas -->
+                <div class="col-md-3">
+                    <label for="data_inicio" class="form-label">Data Início</label>
+                    <input type="date" name="data_inicio" id="data_inicio" class="form-control form-control-sm" required>
+                </div>
+
+                <div class="col-md-3">
+                    <label for="data_final" class="form-label">Data Final</label>
+                    <input type="date" name="data_final" id="data_final" class="form-control form-control-sm">
+                </div>
+
+                <!-- Botão -->
+                <div class="col-12 text-end">
+                    <button type="submit" class="btn btn-success btn-sm">
+                        <i class="bi bi-check-circle"></i> Salvar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+{% block title %}Militares Bolseiros{% endblock %}
+{% block content %}
+<div class="container mt-4">
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+            <h5 class="mb-0"><i class="bi bi-mortarboard"></i> Militares Bolseiros</h5>
+            <div>
+                <!-- Botão Nova Formação -->
+                <a href="{{ url_for('nova_formacao') }}" class="btn btn-light btn-sm">
+                    <i class="bi bi-plus-circle"></i> Nova Formação
+                </a>
+            </div>
+        </div>
+        <div class="card-body">
+
+            <!-- Filtros -->
+            <form method="get" action="{{ url_for('listar_formacao') }}" class="form-inline mb-3">
+    <!-- Select Nome do Militar -->
+    <select name="nome" class="form-control form-control-sm mr-2" style="max-width:180px;">
+        <option value="">-- Militar --</option>
+        {% for nome in militares %}
+            <option value="{{ nome }}"
+                {% if request.args.get('nome') == nome %}selected{% endif %}>
+                {{ nome }}
+            </option>
+        {% endfor %}
+    </select>
+
+    <!-- Select Unidade -->
+    <select name="unidade" class="form-control form-control-sm mr-2" style="max-width:180px;">
+        <option value="">-- Unidade --</option>
+        {% for unidade in unidades %}
+            <option value="{{ unidade }}"
+                {% if request.args.get('unidade') == unidade %}selected{% endif %}>
+                {{ unidade }}
+            </option>
+        {% endfor %}
+    </select>
+
+    <button type="submit" class="btn btn-primary btn-sm">Filtrar</button>
+
+    <!-- Botão Exportar PDF compacto -->
+    <a class="btn btn-danger btn-sm ml-2"
+       href="{{ url_for('relatorio_formacoes_pdf',
+                        nome=request.args.get('nome'),
+                        unidade=request.args.get('unidade')) }}">
+        <i class="bi bi-file-earmark-pdf"></i> Exportar PDF
+    </a>
+</form>
+
+
+            <!-- Tabela -->
+            <div class="table-responsive">
+                <table class="table table-sm table-striped table-hover table-bordered align-middle">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Nome</th>
+                            <th>Unidade</th>
+                            <th>Curso</th>
+                            <th>Estabelecimento de Ensino</th>
+                            <th>Data Início</th>
+                            <th>Data Final</th>
+                            <th class="text-center">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for f in dados %}
+                        <tr>
+                            <td>{{ f.militar.nome_completo }}</td>
+                            <td>{{ f.militar.unidade }}</td>
+                            <td>{{ f.curso }}</td>
+                            <td>{{ f.estabelecimento }}</td>
+                            <td>{{ f.data_inicio.strftime('%d/%m/%Y') }}</td>
+                            <td>
+                                {% if f.data_final %}
+                                    {{ f.data_final.strftime('%d/%m/%Y') }}
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+                            <td class="text-center">
+                                <a href="{{ url_for('editar_formacao', id=f.id) }}" class="btn btn-warning btn-sm">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                <form action="{{ url_for('apagar_formacao', id=f.id) }}" method="post" style="display:inline;">
+                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Deseja realmente apagar esta formação?');">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="7" class="text-center text-muted">Nenhuma formação cadastrada.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

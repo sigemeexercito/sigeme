@@ -1,0 +1,156 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+  <h3 class="mb-3 text-center fw-bold">Relatório Estatístico</h3>
+
+  <div class="row">
+    <!-- Totais por Situação -->
+    <div class="col-md-6">
+      <div class="card mb-3 shadow-sm">
+        <div class="card-header bg-info text-white">
+          <i class="bi bi-people-fill"></i> Totais por Situação
+        </div>
+        <div class="card-body">
+          <canvas id="chartSituacao"></canvas>
+          <table class="table table-striped table-hover mt-3">
+            <thead class="table-dark">
+              <tr><th>Situação</th><th>Total</th></tr>
+            </thead>
+            <tbody>
+              {% for situacao, total in totais_situacao %}
+              <tr {% if situacao == 'Falecido' %}class="table-danger"{% endif %}>
+                <td>{{ situacao }}</td><td>{{ total }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Totais por Patente -->
+    <div class="col-md-6">
+      <div class="card mb-3 shadow-sm">
+        <div class="card-header bg-success text-white">
+          <i class="bi bi-award-fill"></i> Totais por Patente
+        </div>
+        <div class="card-body">
+          <canvas id="chartPatente"></canvas>
+          <table class="table table-striped table-hover mt-3">
+            <thead class="table-dark">
+              <tr><th>Situação</th><th>Patente</th><th>Total</th></tr>
+            </thead>
+            <tbody>
+              {% for row in totais_por_patente %}
+              <tr {% if row.situacao == 'Falecido' %}class="table-danger"{% endif %}>
+                <td>{{ row.situacao }}</td><td>{{ row.patente }}</td><td>{{ row.total }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Falecidos por Causa -->
+  <div class="card mb-3 shadow-sm">
+    <div class="card-header bg-danger text-white">
+      <i class="bi bi-heartbreak-fill"></i> Falecidos por Causa
+    </div>
+    <div class="card-body">
+      <canvas id="chartCausa"></canvas>
+      <table class="table table-striped table-hover mt-3">
+        <thead class="table-dark">
+          <tr><th>Causa</th><th>Total</th></tr>
+        </thead>
+        <tbody>
+          {% for causa, total in falecidos_por_causa %}
+          <tr><td>{{ causa }}</td><td>{{ total }}</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  // Totais por Situação (pizza)
+const situacaoLabels = {{ totais_situacao|map(attribute=0)|list|tojson }};
+const situacaoData = {{ totais_situacao|map(attribute=1)|list|tojson }};
+
+// Definir cores dinamicamente
+const situacaoColors = situacaoLabels.map(label => {
+  if (label === "Falecido") return "#dc3545"; // vermelho institucional
+  if (label === "Activo") return "#0d6efd";   // azul
+  if (label === "Reformado") return "#198754"; // verde
+  return "#ffc107"; // amarelo para outros
+});
+
+new Chart(document.getElementById('chartSituacao'), {
+  type: 'pie',
+  data: {
+    labels: situacaoLabels,
+    datasets: [{
+      data: situacaoData,
+      backgroundColor: situacaoColors
+    }]
+  }
+});
+
+
+  // Totais por Patente (barras horizontais)
+  const patenteLabels = {{ totais_por_patente|map(attribute='patente')|list|tojson }};
+  const patenteData = {{ totais_por_patente|map(attribute='total')|list|tojson }};
+  new Chart(document.getElementById('chartPatente'), {
+    type: 'bar',
+    data: {
+      labels: patenteLabels,
+      datasets: [{
+        label: 'Total',
+        data: patenteData,
+        backgroundColor: '#198754'
+      }]
+    },
+    options: {
+      indexAxis: 'y',
+      scales: {
+        x: {
+          ticks: {
+            callback: function(value) {
+              return value.toString(); // mostra sem vírgulas
+            }
+          }
+        }
+      }
+    }
+  });
+
+  // Falecidos por Causa (barras)
+  const causaLabels = {{ falecidos_por_causa|map(attribute=0)|list|tojson }};
+  const causaData = {{ falecidos_por_causa|map(attribute=1)|list|tojson }};
+  new Chart(document.getElementById('chartCausa'), {
+    type: 'bar',
+    data: {
+      labels: causaLabels,
+      datasets: [{
+        label: 'Total',
+        data: causaData,
+        backgroundColor: '#dc3545'
+      }]
+    },
+    options: {
+      scales: {
+        y: {
+          ticks: {
+            precision: 0 // garante números inteiros simples
+          }
+        }
+      }
+    }
+  });
+</script>
+{% endblock %}

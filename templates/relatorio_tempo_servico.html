@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}Relatório por Tempo de Serviço{% endblock %}
+{% block content %}
+<h2>Relatório por Tempo de Serviço</h2>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Tempo de Serviço</th>
+      <th>Total</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for d in dados %}
+    <tr>
+      <td>{{ d.tempo_servico }}</td>
+      <td>{{ d.total }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<canvas id="graficoTempoServico"></canvas>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  const ctx = document.getElementById('graficoTempoServico');
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: {{ dados|map(attribute='tempo_servico')|list|tojson }},
+      datasets: [{
+        label: 'Total por Tempo de Serviço',
+        data: {{ dados|map(attribute='total')|list|tojson }},
+        backgroundColor: 'rgba(75, 192, 192, 0.6)'
+      }]
+    }
+  });
+</script>
+{% endblock %}

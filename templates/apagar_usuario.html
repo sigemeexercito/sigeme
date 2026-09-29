@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h3>Apagar Usuário</h3>
+    <div class="alert alert-danger">
+        Tem certeza que deseja apagar o usuário <strong>{{ usuario.nome }}</strong>?
+    </div>
+    <form method="POST" action="{{ url_for('apagar_usuario', id=usuario.id) }}">
+        <button type="submit" class="btn btn-danger">Sim, Apagar</button>
+        <a href="{{ url_for('usuarios') }}" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>
+{% endblock %}

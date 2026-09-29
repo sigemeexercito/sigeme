@@ -1,0 +1,113 @@
+/* =========================
+   Estrutura geral
+========================= */
+html, body {
+    height: 100%;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background-color: #f8f9fa; /* cinza claro */
+}
+
+.container {
+    flex: 1;
+}
+
+/* =========================
+   Navbar
+========================= */
+.navbar {
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* =========================
+   Cards de KPI
+========================= */
+.card {
+    border: none;
+    border-radius: 8px;
+    transition: transform 0.2s ease-in-out;
+}
+.card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+.card h6 {
+    font-weight: 600;
+    color: #6c757d;
+}
+
+/* =========================
+   Tabela
+========================= */
+.table {
+    font-size: 0.9rem;
+}
+.table thead {
+    background-color: #0d6efd; /* azul institucional */
+    color: #fff;
+}
+.table-hover tbody tr:hover {
+    background-color: #e9f2ff;
+}
+
+/* =========================
+   Footer institucional
+========================= */
+footer {
+    margin-top: auto;
+    background-color: #212529;
+    color: #fff;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+}
+footer p {
+    margin: 0;
+}
+
+/* =========================
+   Alertas
+========================= */
+.alert {
+    border-radius: 6px;
+    font-weight: 500;
+}
+
+/* =========================
+   Cabeçalho institucional
+========================= */
+.cabecalho { 
+    text-align: center; 
+    border-bottom: 2px solid #0d6efd; 
+    padding-bottom: 10px; 
+    margin-bottom: 20px;
+}
+
+.cabecalho h5 { 
+    font-size: 1.8rem !important; 
+    font-weight: bold; 
+}
+
+.cabecalho h6 { 
+    font-size: 1.4rem !important; 
+}
+
+.cabecalho h3 { 
+    font-size: 2.2rem !important; 
+    font-weight: bold; 
+    color: #0d6efd; 
+}
+
+.brasao { 
+    height: 120px; 
+    display: block; 
+    margin: 0 auto 15px auto; 
+}
+/* Card headers em verde institucional */
+.card-header {
+    background-color: #198754 !important; /* Verde Bootstrap (btn-success) */
+    color: #fff !important;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}

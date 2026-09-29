@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}Editar Unidade{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="mb-4">Editar Unidade</h1>
+
+    <form method="post">
+        <div class="mb-3">
+            <label for="nome" class="form-label">Nome da Unidade</label>
+            <input type="text" class="form-control" id="nome" name="nome" value="{{ unidade.nome }}" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="prevista" class="form-label">Tipo de Unidade</label>
+            <select id="prevista" name="prevista" class="form-select">
+                <option value="true" {% if unidade.prevista %}selected{% endif %}>Prevista</option>
+                <option value="false" {% if not unidade.prevista %}selected{% endif %}>Não Prevista</option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Atualizar</button>
+        <a href="{{ url_for('unidades') }}" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>
+{% endblock %}

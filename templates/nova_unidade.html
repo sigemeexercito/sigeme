@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}Nova Unidade{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="mb-4">Adicionar Nova Unidade</h1>
+
+    <form method="post">
+        <div class="mb-3">
+            <label for="nome" class="form-label">Nome da Unidade</label>
+            <input type="text" class="form-control" id="nome" name="nome" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="prevista" class="form-label">Tipo de Unidade</label>
+            <select id="prevista" name="prevista" class="form-select">
+                <option value="true">Prevista</option>
+                <option value="false">Não Prevista</option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Salvar</button>
+        <a href="{{ url_for('unidades') }}" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,139 @@
+{% extends "base.html" %}
+{% block title %}Lista de Militares{% endblock %}
+{% block content %}
+<h2 class="mb-4">Militares Cadastrados</h2>
+
+<!-- Aba de Relatórios -->
+<div class="mb-3">
+  <ul class="nav nav-tabs">
+    <li class="nav-item dropdown">
+      <a class="nav-link dropdown-toggle bg-primary text-white" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">
+        📊 Relatórios
+      </a>
+      <ul class="dropdown-menu">
+        <li><a class="dropdown-item" href="{{ url_for('relatorio_filtro') }}">🔍 Relatório com Filtros</a></li>
+      </ul>
+    </li>
+  </ul>
+</div>
+
+<!-- Botão para expandir/ocultar -->
+<div class="d-flex justify-content-end mb-2">
+  <button class="btn btn-sm btn-outline-primary" type="button" data-bs-toggle="collapse" data-bs-target="#tabelaMilitares">
+    Mostrar / Ocultar Lista
+  </button>
+</div>
+
+<!-- Collapse da tabela -->
+<div id="tabelaMilitares" class="collapse show">
+  <style>
+      table.table { font-size: 0.9rem; }
+      table.table th, table.table td { padding: 0.5rem; }
+      .btn-warning { background-color: #ffc107; border-color: #ffc107; color: #212529; }
+      .btn-warning:hover { background-color: #e0a800; border-color: #d39e00; }
+      .btn-danger { background-color: #dc3545; border-color: #dc3545; }
+      .btn-danger:hover { background-color: #bd2130; border-color: #b21f2d; }
+  </style>
+
+  <table class="table table-striped table-hover align-middle">
+      <thead class="table-dark">
+          <tr>
+              <th>ID</th>
+              <th>Nome</th>
+              <th>Patente</th>
+              <th>Cargo</th>
+              <th>Data Nascimento</th>
+              <th>Data Incorporação</th>
+              <th>Última Promoção</th>
+              <th>Nível Acadêmico</th>
+              <th>Regime</th>
+              <th>Sexo</th>
+              <th>Idade</th>
+              <th>Tempo Serviço</th>
+              <th>Especialidade</th>
+              <th>Unidade</th>
+              <th>NUIT</th>
+              <th>Conta Bancária</th>
+              <th>Banco</th>
+              <th>OS Última Promoção</th>
+              <th>Situação</th>
+              <th class="text-center">Ações</th>
+          </tr>
+      </thead>
+      <tbody>
+          {% for m in militares %}
+          <tr>
+              <td>{{ m.id }}</td>
+              <td>{{ m.nome_completo }}</td>
+              <td>{{ m.patente }}</td>
+              <td>{{ m.cargo_funcao }}</td>
+              <td>{{ m.data_nascimento }}</td>
+              <td>{{ m.data_incorporacao }}</td>
+              <td>{{ m.data_ultima_promocao }}</td>
+              <td>{{ m.nivel_academico }}</td>
+              <td>{{ m.regime }}</td>
+              <td>{{ m.sexo }}</td>
+              <td>{{ m.idade }}</td>
+              <td>{{ m.tempo_servico }}</td>
+              <td>{{ m.especialidade }}</td>
+              <td>{{ m.unidade }}</td>
+              <td>{{ m.nuit }}</td>
+              <td>{{ m.conta_bancaria }}</td>
+              <td>{{ m.banco }}</td>
+              <td>{{ m.numero_os_ultima_promocao }}</td>
+              <td>
+                  {{ m.situacao }}
+                  {% if m.situacao == "Expulsao" %}
+                      <br><small>OS: {{ m.ordem_servico }}</small>
+                  {% elif m.situacao == "Falecido" %}
+                      <br><small>Data Óbito: {{ m.data_obito }}</small>
+                      <br><small>Motivo: {{ m.motivo_obito }}</small>
+                  {% endif %}
+              </td>
+              <td class="text-center">
+                  <div class="btn-group" role="group">
+                      <a href="{{ url_for('edit_militar', id=m.id) }}" class="btn btn-sm btn-warning">✏️ Editar</a>
+                      <form action="{{ url_for('delete_militar', id=m.id) }}" method="POST" style="display:inline;">
+                          <button type="submit" class="btn btn-sm btn-danger"
+                                  onclick="return confirm('Tem certeza que deseja excluir este registro?');">
+                              🗑️ Excluir
+                          </button>
+                      </form>
+                  </div>
+              </td>
+          </tr>
+          {% endfor %}
+      </tbody>
+  </table>
+</div>
+
+<!-- Conteúdo alternativo quando a lista está oculta -->
+<div id="tabelaMilitares" class="collapse">
+  <div class="card card-body text-center fade-in">
+    <img src="{{ url_for('static', filename='img/sargento.png') }}" 
+         alt="Imagem Institucional Militar" 
+         class="img-fluid mx-auto d-block" 
+         style="max-width: 350px; height: auto;">
+    <div class="text-center p-3 bg-light">
+      <p class="text-muted mb-0">
+        Lista oculta — clique em "Mostrar" para visualizar os militares cadastrados.
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- CSS para efeito fade-in -->
+<style>
+.fade-in {
+  animation: fadeIn 1.2s ease-in-out;
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+</style>
+
+</div>
+
+
+{% endblock %}

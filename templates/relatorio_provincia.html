@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}Relatório por Província{% endblock %}
+{% block content %}
+<h2>Relatório por Província</h2>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Província</th>
+      <th>Total</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for d in dados %}
+    <tr>
+      <td>{{ d.provincia }}</td>
+      <td>{{ d.total }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<canvas id="graficoProvincia"></canvas>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  const ctx = document.getElementById('graficoProvincia');
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: {{ dados|map(attribute='provincia')|list|tojson }},
+      datasets: [{
+        label: 'Total por Província',
+        data: {{ dados|map(attribute='total')|list|tojson }},
+        backgroundColor: 'rgba(255, 99, 132, 0.6)'
+      }]
+    }
+  });
+</script>
+{% endblock %}

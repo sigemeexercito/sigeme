@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}SIGEME - Sistema de Gestão de Militares do Exército{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="bg-light">
+
+    <!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top shadow-sm">
+    <div class="container">
+        <a class="navbar-brand fw-bold" href="{{ url_for('listar_militares') }}">
+            SIGEME
+        </a>
+
+        <!-- Botão responsivo -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" 
+                data-bs-target="#navbarNav" aria-controls="navbarNav" 
+                aria-expanded="false" aria-label="Alternar navegação">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Links da navbar -->
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+
+    {% if current_user.perfil|lower == "admin" %}
+        <!-- Admin vê todos -->
+        <!-- Dropdown Cadastros -->
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="cadastrosDropdown" role="button" data-bs-toggle="dropdown">
+                <i class="bi bi-person-plus"></i> Cadastros
+            </a>
+            <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="{{ url_for('novo') }}"><i class="bi bi-person-fill"></i> Novo Militar</a></li>
+                <li><a class="dropdown-item" href="{{ url_for('listar_especialidades') }}"><i class="bi bi-book"></i> Especialidades</a></li>
+                <li><a class="dropdown-item" href="{{ url_for('add_usuario') }}"><i class="bi bi-people"></i> Usuários</a></li>
+                <li><a class="dropdown-item" href="{{ url_for('unidades') }}"><i class="bi bi-building"></i> Unidades</a></li>
+                <li><a class="dropdown-item" href="{{ url_for('nova_formacao') }}"><i class="bi bi-mortarboard"></i> Nova Formação</a></li>
+            </ul>
+        </li>
+
+        <!-- Dropdown Relatórios -->
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="relatoriosDropdown" role="button" data-bs-toggle="dropdown">
+                <i class="bi bi-bar-chart"></i> Relatórios
+            </a>
+            <ul class="dropdown-menu">
+			<li><a class="dropdown-item" href="{{ url_for('relatorio_filtro') }}">
+				<i class="bi bi-list-check"></i> Detalhados</a></li>
+			<li><a class="dropdown-item" href="{{ url_for('relatorio_filtro_agregado') }}">
+				<i class="bi bi-diagram-3"></i> Agregados</a></li>
+			<li><a class="dropdown-item" href="{{ url_for('relatorio_contagem') }}">
+				<i class="bi bi-calculator"></i> Contagem</a></li>
+			<li><a class="dropdown-item" href="{{ url_for('estatisticas.estatisticas') }}">
+				<i class="bi bi-graph-up"></i> Estatístico</a></li>
+		</ul>
+
+        </li>
+
+        <!-- Dropdown Formação -->
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="formacaoDropdown" role="button" data-bs-toggle="dropdown">
+                <i class="bi bi-mortarboard"></i> Formação
+            </a>
+            <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="{{ url_for('listar_formacao') }}"><i class="bi bi-list-task"></i> Listar Formações</a></li>
+                <li><a class="dropdown-item" href="{{ url_for('nova_formacao') }}"><i class="bi bi-plus-circle"></i> Nova Formação</a></li>
+            </ul>
+        </li>
+
+        <!-- Botão Ficha Militar -->
+        <li class="nav-item">
+            <a class="btn btn-outline-light me-2" href="{{ url_for('filtro_militar') }}">
+        <i class="bi bi-file-earmark-person"></i> Ficha Militar
+           </a>
+
+        </li>
+		<!-- Botão Auditoria -->
+		<li class="nav-item">
+			<a class="btn btn-outline-light me-2" href="{{ url_for('listar_auditorias') }}">
+				<i class="bi bi-journal-text"></i> Auditoria
+			</a>
+		</li>
+
+
+    {% elif current_user.perfil|lower == "operador" %}
+        <!-- Operador só vê Novo Militar + Relatórios -->
+        <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('novo') }}"><i class="bi bi-person-fill"></i> Novo Militar</a>
+        </li>
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="relatoriosDropdown" role="button" data-bs-toggle="dropdown">
+                <i class="bi bi-bar-chart"></i> Relatórios
+            </a>
+            <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="{{ url_for('relatorio_filtro') }}">Detalhados</a></li>
+                <li><a class="dropdown-item" href="{{ url_for('relatorio_filtro_agregado') }}">Agregados</a></li>
+                <li><a class="dropdown-item" href="{{ url_for('relatorio_contagem') }}">Contagem</a></li>
+            </ul>
+        </li>
+
+    {% elif current_user.perfil|lower == "visualizador" %}
+        <!-- Visualizador só vê Relatórios -->
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="relatoriosDropdown" role="button" data-bs-toggle="dropdown">
+                <i class="bi bi-bar-chart"></i> Relatórios
+            </a>
+            <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="{{ url_for('relatorio_filtro') }}">Detalhados</a></li>
+                <li><a class="dropdown-item" href="{{ url_for('relatorio_filtro_agregado') }}">Agregados</a></li>
+                <li><a class="dropdown-item" href="{{ url_for('relatorio_contagem') }}">Contagem</a></li>
+            </ul>
+        </li>
+    {% endif %}
+
+    <!-- Dashboard e Sair para todos -->
+    <li class="nav-item">
+        <a class="btn btn-outline-light me-2" href="{{ url_for('dashboard') }}">
+            <i class="bi bi-speedometer2"></i> Dashboard
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="btn btn-danger" href="{{ url_for('logout') }}">
+            <i class="bi bi-box-arrow-right"></i> Sair
+        </a>
+    </li>
+</ul>
+
+        </div>
+    </div>
+</nav>
+
+    <!-- Conteúdo principal -->
+    <div class="container mt-5 pt-4">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <div class="alert alert-{{ category }} alert-dismissible fade show mt-3" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+              </div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

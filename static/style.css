@@ -1,0 +1,171 @@
+/* Tema global para o sistema */
+
+/* Corpo da página */
+body {
+    background-color: #f8f9fa;
+    font-family: Arial, sans-serif;
+}
+
+/* Cabeçalho */
+.navbar {
+    background-color: #0d6efd !important;
+}
+.navbar-brand {
+    color: #fff !important;
+    font-weight: bold;
+}
+
+/* Títulos */
+h2 {
+    color: #0d6efd;
+}
+
+/* Tabelas */
+.table {
+    font-size: 0.9rem;
+}
+.table th {
+    background-color: #0d6efd;
+    color: #fff;
+}
+.table td, .table th {
+    padding: 0.5rem;
+    vertical-align: middle;
+}
+
+/* Botões */
+.btn-primary {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+}
+.btn-primary:hover {
+    background-color: #0b5ed7;
+    border-color: #0a58ca;
+}
+.btn-warning {
+    background-color: #ffc107;
+    border-color: #ffc107;
+    color: #212529;
+}
+.btn-danger {
+    background-color: #dc3545;
+    border-color: #dc3545;
+}
+/* Container geral dos steps */
+.step {
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  margin-bottom: 25px;
+  background-color: #fdfdfd;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+/* Cabeçalho lateral azul */
+.step .col-md-3.bg-primary {
+  min-height: 100%;
+  padding: 20px;
+  text-align: center;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* Labels mais visíveis */
+.step .form-label {
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+/* Inputs com destaque */
+.step .form-control,
+.step .form-select {
+  border: 1px solid #ced4da;
+  transition: all 0.2s ease-in-out;
+}
+
+.step .form-control:focus,
+.step .form-select:focus {
+  border-color: #0d6efd;
+  box-shadow: 0 0 4px rgba(13,110,253,0.4);
+}
+
+/* Botões de navegação */
+.step .btn {
+  font-weight: 600;
+  padding: 6px 18px;
+  border-radius: 4px;
+}
+
+.step .btn-primary {
+  background-color: #0d6efd;
+  border-color: #0d6efd;
+}
+
+.step .btn-secondary {
+  background-color: #6c757d;
+  border-color: #6c757d;
+}
+.step {
+  border: 1px solid #dee2e6; /* borda leve ao redor */
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.step-header {
+  min-height: 100%;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.step .bg-primary {
+  min-height: 100%;
+}
+
+.step .bg-white {
+  background-color: #fff;
+}
+.step {
+  border: 1px solid #dee2e6; /* borda leve */
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+
+.step-header {
+  min-height: 100%;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.step .bg-primary {
+  min-height: 100%;
+}
+
+.step .bg-white {
+  background-color: #fff;
+}
+/* Força a faixa azul ocupar toda a altura do step */
+.step .col-md-3.bg-primary {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 100%;
+  height: 100%;
+}
+/* Força a coluna azul a ocupar toda a altura do step */
+.step .row {
+  display: flex;
+  align-items: stretch; /* estica as colunas */
+}
+
+.step .col-md-3.bg-primary {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+

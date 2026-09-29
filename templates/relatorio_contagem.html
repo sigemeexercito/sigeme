@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block title %}Relatório de Contagem{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="mb-4">Relatório de Contagem</h1>
+
+    <!-- Formulário de Filtros -->
+    <form method="get" action="{{ url_for('relatorio_contagem') }}" class="row g-3 mb-4">
+        <div class="col-md-3">
+            <label for="patente" class="form-label">Patente</label>
+            <select name="patente" id="patente" class="form-select">
+                <option value="">-- Todas --</option>
+                {% for p in patentes %}
+                    <option value="{{ p }}" {% if patente == p %}selected{% endif %}>{{ p }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label for="unidade" class="form-label">Unidade</label>
+            <select name="unidade" id="unidade" class="form-select">
+                <option value="">-- Todas --</option>
+                {% for u in unidades %}
+                    <option value="{{ u }}" {% if unidade == u %}selected{% endif %}>{{ u }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label for="especialidade" class="form-label">Especialidade</label>
+            <select name="especialidade" id="especialidade" class="form-select">
+                <option value="">-- Todas --</option>
+                {% for e in especialidades %}
+                    <option value="{{ e }}" {% if especialidade == e %}selected{% endif %}>{{ e }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label for="regime" class="form-label">Regime</label>
+            <select name="regime" id="regime" class="form-select">
+                <option value="">-- Todos --</option>
+                {% for r in regimes %}
+                    <option value="{{ r }}" {% if regime == r %}selected{% endif %}>{{ r }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- Novo filtro: Situação -->
+        <div class="col-md-3">
+            <label for="situacao" class="form-label">Situação</label>
+            <select name="situacao" id="situacao" class="form-select">
+                <option value="">-- Todas --</option>
+                <option value="Activo" {% if situacao == 'Activo' %}selected{% endif %}>Activo</option>
+                <option value="RD" {% if situacao == 'RD' %}selected{% endif %}>RD</option>
+                <option value="Cessacao RV" {% if situacao == 'Cessacao RV' %}selected{% endif %}>Cessação RV</option>
+                <option value="Reforma extraordinaria" {% if situacao == 'Reforma extraordinaria' %}selected{% endif %}>Reforma extraordinária</option>
+                <option value="Expulsao" {% if situacao == 'Expulsao' %}selected{% endif %}>Expulsão</option>
+                <option value="Falecido" {% if situacao == 'Falecido' %}selected{% endif %}>Falecido</option>
+                <option value="Disertor" {% if situacao == 'Disertor' %}selected{% endif %}>Disertor</option>
+            </select>
+        </div>
+
+        <div class="col-md-12 d-flex align-items-end">
+            <button type="submit" class="btn btn-primary w-100">Consultar</button>
+        </div>
+    </form>
+
+    <!-- Resultado -->
+    {% if total is not none %}
+        <div class="alert alert-info">
+            <strong>Total encontrado:</strong> {{ total }}
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

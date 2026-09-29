@@ -1,0 +1,176 @@
+{% extends "base.html" %}
+
+{% block title %}SIGEME - Dashboard{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+
+    <!-- Mensagem de boas-vindas -->
+    <div class="alert alert-info shadow-sm">
+        Bem-vindo, <strong>{{ current_user.nome }}</strong> ({{ current_user.perfil }})
+    </div>
+
+    <!-- KPIs -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card text-center shadow-sm border-primary">
+                <div class="card-body text-primary">
+                    <i class="bi bi-people-fill fs-2"></i>
+                    <h6>Total Usuários</h6>
+                    <h3>{{ total_usuarios }}</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center shadow-sm border-info">
+                <div class="card-body text-info">
+                    <i class="bi bi-building fs-2"></i>
+                    <h6>Total Unidades</h6>
+                    <h3>{{ total_unidades }}</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center shadow-sm border-success">
+                <div class="card-body text-success">
+                    <i class="bi bi-check-circle-fill fs-2"></i>
+                    <h6>Previstas</h6>
+                    <h3>{{ unidades_previstas }}</h3>
+                    <small>{{ (unidades_previstas / total_unidades * 100)|round(1) if total_unidades > 0 else 0 }}%</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center shadow-sm border-danger">
+                <div class="card-body text-danger">
+                    <i class="bi bi-x-circle-fill fs-2"></i>
+                    <h6>Não Previstas</h6>
+                    <h3>{{ unidades_nao_previstas }}</h3>
+                    <small>{{ (unidades_nao_previstas / total_unidades * 100)|round(1) if total_unidades > 0 else 0 }}%</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Gráficos compactos -->
+    <div class="row mb-4">
+        <div class="col-md-4 text-center">
+            <h5><i class="bi bi-person-lines-fill"></i> Distribuição de Perfis</h5>
+            <div style="max-width:300px; margin:auto;">
+                <canvas id="perfilChart" height="200"></canvas>
+            </div>
+        </div>
+        <div class="col-md-4 text-center">
+            <h5><i class="bi bi-building"></i> Unidades Previstas vs Não Previstas</h5>
+            <div style="max-width:300px; margin:auto;">
+                <canvas id="unidadeChart" height="200"></canvas>
+            </div>
+        </div>
+        <div class="col-md-4 text-center">
+            <h5><i class="bi bi-award-fill"></i> Distribuição por Patente</h5>
+            <div style="max-width:300px; margin:auto;">
+                <canvas id="patenteChart" height="200"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Últimos Usuários -->
+    <h5 class="mt-4"><i class="bi bi-person-lines-fill"></i> Últimos Usuários</h5>
+    <table class="table table-striped table-hover">
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Usuário</th>
+                <th>Perfil</th>
+                <th>Criado em</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for u in ultimos_usuarios %}
+            <tr>
+                <td class="text-truncate" style="max-width:200px;" title="{{ u.nome }}">{{ u.nome }}</td>
+                <td>{{ u.username }}</td>
+                <td>{{ u.perfil }}</td>
+                <td>{{ u.created_at.strftime('%d/%m/%Y') if u.created_at else '-' }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+</div>
+
+<!-- Rodapé institucional -->
+<footer class="bg-dark text-white text-center py-3 mt-5 shadow-sm">
+    <small>© 2026 SIGEME - Sistema de Gestão de Militares do Exército. Todos os direitos reservados.</small>
+    <div class="marquee-container mt-2">
+        <div class="marquee-text">
+            🦁 Leões da Floresta — Pelo Povo e Pela Pátria
+        </div>
+    </div>
+</footer>
+
+<style>
+.marquee-container {
+  overflow: hidden;
+  white-space: nowrap;
+}
+.marquee-text {
+  display: inline-block;
+  padding-left: 100%;
+  animation: marquee 15s linear infinite;
+  font-weight: bold;
+  color: #ffc107; /* amarelo institucional */
+}
+@keyframes marquee {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-100%); }
+}
+</style>
+
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Distribuição de Perfis
+    const perfilCtx = document.getElementById('perfilChart');
+    new Chart(perfilCtx, {
+        type: 'pie',
+        data: {
+            labels: ['Admin', 'Operador'],
+            datasets: [{
+                data: [{{ admins_count }}, {{ operadores_count }}],
+                backgroundColor: ['#0d6efd', '#ffc107']
+            }]
+        },
+        options: { responsive: true, maintainAspectRatio: false }
+    });
+
+    // Unidades Previstas vs Não Previstas
+    const unidadeCtx = document.getElementById('unidadeChart');
+    new Chart(unidadeCtx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Previstas', 'Não Previstas'],
+            datasets: [{
+                data: [{{ unidades_previstas }}, {{ unidades_nao_previstas }}],
+                backgroundColor: ['#198754', '#dc3545']
+            }]
+        },
+        options: { responsive: true, maintainAspectRatio: false }
+    });
+
+    // Distribuição por Patente
+    const patenteCtx = document.getElementById('patenteChart');
+    new Chart(patenteCtx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Oficiais', 'Sargentos', 'Praças'],
+            datasets: [{
+                data: [{{ oficiais_count }}, {{ sargentos_count }}, {{ pracas_count }}],
+                backgroundColor: ['#0d6efd', '#ffc107', '#20c997']
+            }]
+        },
+        options: { responsive: true, maintainAspectRatio: false }
+    });
+</script>
+{% endblock %}

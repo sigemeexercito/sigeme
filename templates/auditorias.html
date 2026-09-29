@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+
+{% block title %}Registos de Auditoria{% endblock %}
+
+{% block content %}
+<div class="card shadow-sm mb-4">
+    <div class="card-header bg-primary text-white">
+        <i class="bi bi-journal-text"></i> Registos de Auditoria
+    </div>
+    <div class="card-body">
+
+        <!-- Filtros -->
+        <form method="get" class="row g-2 mb-3">
+            <!-- Dropdown Usuários -->
+            <div class="col-md-3">
+                <select name="usuario" class="form-select">
+                    <option value="">-- Selecionar Usuário --</option>
+                    {% for u in usuarios %}
+                        <option value="{{ u }}"
+                            {% if request.args.get('usuario') == u %}selected{% endif %}>
+                            {{ u }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- Dropdown Ações -->
+            <div class="col-md-3">
+                <select name="acao" class="form-select">
+                    <option value="">-- Selecionar Ação --</option>
+                    {% for a in acoes %}
+                        <option value="{{ a }}"
+                            {% if request.args.get('acao') == a %}selected{% endif %}>
+                            {{ a }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- Datas -->
+            <div class="col-md-3">
+                <input type="date" name="data_inicio" class="form-control"
+                       value="{{ request.args.get('data_inicio','') }}">
+            </div>
+            <div class="col-md-3">
+                <input type="date" name="data_fim" class="form-control"
+                       value="{{ request.args.get('data_fim','') }}">
+            </div>
+
+            <!-- Botões -->
+            <div class="col-12 text-end">
+                <button type="submit" class="btn btn-primary btn-sm">Filtrar</button>
+                <a href="{{ url_for('listar_auditorias') }}" class="btn btn-secondary btn-sm">Limpar</a>
+                <button type="button" class="btn btn-success btn-sm">Exportar</button>
+            </div>
+        </form>
+
+        <!-- Tabela -->
+        <table class="table table-hover table-sm">
+            <thead class="table-light">
+                <tr>
+                    <th>Data/Hora</th>
+                    <th>Usuário</th>
+                    <th>Ação</th>
+                    <th>Detalhes</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for log in logs %}
+                <tr>
+                    <td>{{ log.data_hora.strftime('%d/%m/%Y %H:%M:%S') }}</td>
+                    <td>{{ log.usuario }}</td>
+                    <td>
+                        {% if log.acao == 'Criar' %}
+                            <span class="badge bg-success">Criar</span>
+                        {% elif log.acao == 'Editar' %}
+                            <span class="badge bg-primary">Editar</span>
+                        {% elif log.acao == 'Eliminar' %}
+                            <span class="badge bg-danger">Eliminar</span>
+                        {% elif log.acao == 'Login' %}
+                            <span class="badge bg-info">Login</span>
+                        {% elif log.acao == 'Logout' %}
+                            <span class="badge bg-secondary">Logout</span>
+                        {% elif log.acao == 'Exportar' %}
+                            <span class="badge bg-warning text-dark">Exportar</span>
+                        {% else %}
+                            <span class="badge bg-dark">{{ log.acao }}</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ log.detalhes }}</td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="4" class="text-center">Nenhum registo encontrado</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

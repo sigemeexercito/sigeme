@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h3>Usuários</h3>
+    <a href="{{ url_for('add_usuario') }}" class="btn btn-success mb-3">
+        <i class="bi bi-person-plus"></i> Novo Usuário
+    </a>
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th style="width:5%">ID</th>
+                    <th style="width:20%">Nome</th>
+                    <th style="width:20%">Usuário</th>
+                    <th style="width:15%">Perfil</th>
+                    <th style="width:20%" class="text-center">Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for u in usuarios %}
+                <tr>
+                    <td>{{ u.id }}</td>
+                    <td class="text-truncate" style="max-width: 150px;" title="{{ u.nome }}">{{ u.nome }}</td>
+                    <td class="text-truncate" style="max-width: 150px;" title="{{ u.username }}">{{ u.username }}</td>
+                    <td>{{ u.perfil }}</td>
+                    <td class="text-center">
+                        <a href="{{ url_for('editar_usuario', id=u.id) }}" 
+                           class="btn btn-sm btn-primary" title="Editar">
+                            <i class="bi bi-pencil-square"></i>
+                        </a>
+                        <a href="{{ url_for('apagar_usuario', id=u.id) }}" 
+                           class="btn btn-sm btn-danger" title="Apagar">
+                            <i class="bi bi-trash"></i>
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
